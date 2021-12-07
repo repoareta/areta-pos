@@ -2334,23 +2334,36 @@
                                             <div class="col-12">
                                                 <form action="">
                                                     <div class="row">
-                                                        <div class="col-md-6 mb-10">
-                                                            <label class="required form-label">Nama Kategori</label>
-                                                            <input type="text" class="form-control" autocomplete="off"/>
-                                                        </div>
-                                                        <div class="col-md-6 mb-10">
-                                                            <label class="form-label">Nama Parent</label>
+														<div class="col-md-12 mb-10">
+															<label class="required form-label">Nama Barang</label>
                                                             <select class="form-select">
-                                                                <option>Pilih Parent</option>
+																<option>Pilih Barang</option>
                                                                 <option value="1">Teknologi</option>
                                                                 <option value="2">Computers</option>
                                                                 <option value="3">Shirt</option>
                                                             </select>
                                                         </div>
-                                                        <div class="col-md-12 mb-10">
-                                                            <label class="form-label">Dekripsi</label>
-                                                            <textarea class="form-control" autocomplete="off" rows="3"></textarea>
+														<div class="col-md-6 mb-10">
+															<label class="required form-label">Jumlah Awal</label>
+															<input type="text" class="form-control" value="10" disabled="disabled"/>
+														</div>
+														<div class="col-md-6 mb-10">
+															<label class="required form-label">Unit Awal</label>
+															<input type="text" class="form-control" value="Box" disabled="disabled"/>
+														</div>
+														<div class="col-md-6 mb-10">
+															<label class="required form-label">Unit</label>
+                                                            <select class="form-select">
+																<option>Pilih Unit</option>
+                                                                <option value="1">Pcs</option>
+                                                                <option value="2">Box</option>
+                                                                <option value="3">Container</option>
+                                                            </select>
                                                         </div>
+														<div class="col-md-6 mb-10">
+															<label class="required form-label">Jumlah per Unit</label>
+															<input type="text" class="form-control" autocomplete="off"/>
+														</div>
                                                     </div>
                                                     <button type="submit" class="btn btn-success">Simpan</button>
                                                     <a href="./index.html" class="btn btn-warning">Kembali</a>

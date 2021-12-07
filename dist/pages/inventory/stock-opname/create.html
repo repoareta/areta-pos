@@ -2334,23 +2334,75 @@
                                             <div class="col-12">
                                                 <form action="">
                                                     <div class="row">
+														<div class="col-md-6 mb-10">
+															<label class="form-label">Nama Barang</label>
+															<select class="form-select">
+																<option>Pilih Barang</option>
+																<option value="1">Teknologi</option>
+																<option value="2">Computers</option>
+																<option value="3">Shirt</option>
+															</select>
+														</div>
                                                         <div class="col-md-6 mb-10">
-                                                            <label class="required form-label">Nama Kategori</label>
-                                                            <input type="text" class="form-control" autocomplete="off"/>
-                                                        </div>
-                                                        <div class="col-md-6 mb-10">
-                                                            <label class="form-label">Nama Parent</label>
-                                                            <select class="form-select">
-                                                                <option>Pilih Parent</option>
-                                                                <option value="1">Teknologi</option>
-                                                                <option value="2">Computers</option>
-                                                                <option value="3">Shirt</option>
-                                                            </select>
+                                                            <label class="required form-label">Aktual</label>
+                                                            <input type="number" class="form-control" autocomplete="off"/>
                                                         </div>
                                                         <div class="col-md-12 mb-10">
-                                                            <label class="form-label">Dekripsi</label>
+                                                            <label class="required form-label">Keterangan</label>
                                                             <textarea class="form-control" autocomplete="off" rows="3"></textarea>
                                                         </div>
+
+														<div class="table-responsive my-5">
+															<table class="table gy-5 gs-5">
+																<thead class="table-dark">
+																	<td>#</td>
+																	<td class="min-w-200px">Barang</td>
+																	<td class="min-w-200px">Aktual</td>
+																	<td class="min-w-200px">Keterangan</td>
+																	<td>Action</td>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>
+																			1
+																		</td>
+																		<td>
+																			Taro Net Kentang
+																		</td>
+																		<td>
+																			100
+																		</td>
+																		<td>
+																			Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad cupiditate, libero quos ex obcaecati sed sequi unde commodi alias maxime, consequatur quaerat repellendus tempore ipsum.
+																		</td>
+																		<td>
+																			<button class="btn btn-danger px-3 py-2 m-auto">
+																				<i class="fas fa-minus fs-4 text-white pe-0"></i>
+																			</button>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			2
+																		</td>
+																		<td>
+																			Taro Net Kentang
+																		</td>
+																		<td>
+																			100
+																		</td>
+																		<td>
+																			Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad cupiditate, libero quos ex obcaecati sed sequi unde commodi alias maxime, consequatur quaerat repellendus tempore ipsum.
+																		</td>
+																		<td>
+																			<button class="btn btn-danger px-3 py-2 m-auto">
+																				<i class="fas fa-minus fs-4 text-white pe-0"></i>
+																			</button>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
                                                     </div>
                                                     <button type="submit" class="btn btn-success">Simpan</button>
                                                     <a href="./index.html" class="btn btn-warning">Kembali</a>
