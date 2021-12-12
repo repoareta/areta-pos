@@ -9,6 +9,7 @@ import MasterBarang from "./Pages/Inventory/MasterBarang/Index";
 import { Create as CreateBarang } from "./Pages/Inventory/MasterBarang/Create";
 import Kategori from "./Pages/Inventory/KategoriBarang/Index";
 import { Create as CreateKategori } from "./Pages/Inventory/KategoriBarang/Create";
+import { Edit as EditKategori } from './Pages/Inventory/KategoriBarang/Edit';
 import BarangMasuk from "./Pages/Inventory/BarangMasuk/Index";
 import { Create as CreateBarangMasuk } from "./Pages/Inventory/BarangMasuk/Create";
 import BarangKeluar from "./Pages/Inventory/BarangKeluar/Index";
@@ -62,6 +63,7 @@ function App() {
           <Route path="master-barang/create" element={authorized(<Admin component={<CreateBarang />} />, authenticated)}/>
           <Route path="kategori-barang" element={authorized(<Admin component={<Kategori />} />, authenticated)}/>
           <Route path="kategori-barang/create" element={authorized(<Admin component={<CreateKategori />} />, authenticated)}/>
+          <Route path="kategori-barang/:categoryId/edit" element={authorized(<Admin component={<EditKategori />} />, authenticated)}/>
           <Route path="barang-masuk" element={authorized(<Admin component={<BarangMasuk />} />, authenticated)}/>
           <Route path="barang-masuk/create" element={authorized(<Admin component={<CreateBarangMasuk />} />, authenticated)}/>
           <Route path="barang-keluar" element={authorized(<Admin component={<BarangKeluar />} />, authenticated)}/>
