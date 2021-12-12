@@ -96,11 +96,11 @@ export const Create = () => {
                 <div className="row">
                   <div className="col-md-6 mb-10">
                     <label className="required form-label" htmlFor="name">Full Name</label>
-                    <input type="text" className="form-control" autoComplete="off" name="name" onChange={handleFormUpdate} />
+                    <input type="text" className="form-control" autoComplete="off" name="name" onKeyUp={handleFormUpdate} />
                   </div>
                   <div className="col-md-6 mb-10">
                     <label className="required form-label" htmlFor="email">Email</label>
-                    <input type="email" className="form-control" autoComplete="off" name="email" onChange={handleFormUpdate} />
+                    <input type="email" className="form-control" autoComplete="off" name="email" onKeyUp={handleFormUpdate} />
                   </div>
                   <div className="col-md-6 mb-10">
                     <label className="required form-label" htmlFor="role">Role</label>
@@ -108,7 +108,7 @@ export const Create = () => {
                   </div>
                   <div className="col-md-6 mb-10">
                     <label className="form-label" htmlFor="password">Password</label>
-                    <input type="password" className="form-control" autoComplete="off" name="password" onChange={handleFormUpdate} />
+                    <input type="password" className="form-control" autoComplete="off" name="password" onKeyUp={handleFormUpdate} />
                     <div className="form-text">Biarkan kosong jika ingin menggunakan password bawaan (12345678).</div>
                   </div>
                 </div>

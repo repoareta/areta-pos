@@ -104,7 +104,7 @@ export const Create = () => {
                   <div className="row">
                     <div className="col-md-6 mb-10">
                       <label className="required form-label" htmlFor="name">Nama Kategori</label>
-                      <input type="text" className="form-control" autoComplete="off" name="name" onChange={handleFormUpdate} disabled={loading} />
+                      <input type="text" className="form-control" autoComplete="off" name="name" onKeyUp={handleFormUpdate} disabled={loading} />
                     </div>
                     <div className="col-md-6 mb-10">
                       <label className="form-label" htmlFor="parent_id">Parent</label>

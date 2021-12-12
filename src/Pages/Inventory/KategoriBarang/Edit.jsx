@@ -114,7 +114,7 @@ export const Edit = () => {
                   <div className="row">
                     <div className="col-md-6 mb-10">
                       <label className="required form-label" htmlFor="name">Nama Kategori</label>
-                      <input type="text" className="form-control" autoComplete="off" name="name" onChange={handleFormUpdate} disabled={loading} defaultValue={formInput.name} />
+                      <input type="text" className="form-control" autoComplete="off" name="name" onKeyUp={handleFormUpdate} disabled={loading} defaultValue={formInput.name} />
                     </div>
                     <div className="col-md-6 mb-10">
                       <label className="form-label" htmlFor="parent_id">Parent</label>
