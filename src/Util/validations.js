@@ -1,18 +1,18 @@
 export const clearValidation = () => {
-  let inputs = document.querySelectorAll('input');
+  let inputs = document.querySelectorAll('.is-invalid');
 
   inputs.forEach(element => {
-    if (element.classList.contains('is-invalid')) element.classList.remove('is-invalid');
+    element.classList.remove('is-invalid');
   })
 }
 
 export const validate = (selector, text) => {
   let element = document.querySelector(selector);
   let invalid = document.createElement('div');
-  let prevInvalid = document.querySelectorAll('.invalid-feedback');
+  let invalidFeedback = document.querySelectorAll('.invalid-feedback');
 
-  if (prevInvalid.length > 0) {
-    for (const prevElement of prevInvalid) {
+  if (invalidFeedback.length > 0) {
+    for (const prevElement of invalidFeedback) {
       prevElement.remove();
     }
   }
