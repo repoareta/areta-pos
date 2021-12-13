@@ -5,9 +5,10 @@ import Toggle from 'react-bootstrap-toggle';
 
 import api from '../../../Util/api'
 import Table from '../../../Components/PageComponent/Table';
-import { asset, rupiah } from '../../../Util/commonHelpers';
+import { asset } from '../../../Util/commonHelpers';
 import TablePagination from '../../../Components/PageComponent/TablePagination';
 import { defaultBlueprint } from '../../../Components/pagination.blueprint';
+import { deleteHandler } from '../../../Components/deleteHandler';
 
 export default function MasterBarang() {
   const {signOut} = useSanctum()
@@ -23,20 +24,16 @@ export default function MasterBarang() {
       className: "ps-4 min-w-300px rounded-start",
     },
     {
-      title: "Stok",
-      className: "min-w-125px",
-    },
-    {
-      title: "Harga",
-      className: "min-w-125px",
-    },
-    {
       title: "Deskripsi",
       className: "min-w-200px"
     },
     {
       title: "Status",
-      className: "",
+      className: "text-center",
+    },
+    {
+      title: "Stok Awal",
+      className: "text-center",
     },
     {
       title: "",
@@ -49,7 +46,7 @@ export default function MasterBarang() {
 
     const abortController = new AbortController();
 
-    api().get(`/api/product?page=${currentPage}`, {
+    api().get(`/api/product?page=${currentPage}&relations=category`, {
       signal: abortController.signal,
       params: params,
     }).then(response => {
@@ -95,15 +92,11 @@ export default function MasterBarang() {
             </div>
             <div className="d-flex justify-content-start flex-column">
               <span className="text-dark fw-bolder text-hover-primary cursor-pointer mb-1 fs-6">{item.name}</span>
-              {/* <span className="text-muted fw-bold text-muted d-block fs-7">{item.category.name}</span> */}
+              <span className="text-muted fw-bold text-muted d-block fs-7">{item.category?.map((category, index) => {
+                return (item.category.length - 1) === index ? category.name : `${category.name}, `;
+              })}</span>
             </div>
           </div>
-        </td>
-        <td>
-          <span className="text-dark fw-bolder text-hover-primary cursor-pointer d-block mb-1 fs-6">{item.id}</span>
-        </td>
-        <td>
-          <span className="text-dark fw-bolder text-hover-primary cursor-pointer d-block mb-1 fs-6">{rupiah(item.price)}</span>
         </td>
         <td>
           <span className="text-dark fw-bolder text-hover-primary cursor-pointer d-block mb-1 fs-6 text-truncate" style={{maxWidth: '300px'}}>
@@ -117,16 +110,23 @@ export default function MasterBarang() {
             onClick={() => setToggle(!toggle)}
             size="sm"
             handlestyle="light"
-            active={toggle}
+            active={item.is_active}
             on="Aktif"
             off="Nonaktif"
           />
         </td>
+        <td className="text-center">
+          <span className="text-dark fw-bolder text-hover-primary cursor-pointer d-block mb-1 fs-6">{parseInt(item.initial_stock)}</span>
+        </td>
         <td className="text-end pe-2">
-          <Link to="/" className="badge badge-success p-3 me-1" onClick={(e) => e.preventDefault()}>
+          <Link to={`/inventory/master-barang/${item.id}/edit`} className="badge badge-success p-3 me-1">
             <i className="fas fa-pen fs-5 text-white"></i>
           </Link>
-          <Link to="/" className="badge badge-danger p-3" onClick={(e) => e.preventDefault()}>
+          <Link to="/" className="badge badge-danger p-3" onClick={(e) => {
+            e.preventDefault();
+            e.target.classList.add('disabled');
+            deleteHandler(item.id, setParams, 'product');
+          }}>
             <i className="fas fa-trash fs-5 text-white"></i>
           </Link>
         </td>

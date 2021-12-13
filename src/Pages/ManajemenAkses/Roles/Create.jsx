@@ -84,7 +84,7 @@ export const Create = () => {
                   <div className="row">
                     <div className="col-md-12 mb-10">
                       <label className="required form-label">Nama Role</label>
-                      <input type="text" className="form-control" autoComplete="off" name="name" onChange={handleFormUpdate} />
+                      <input type="text" className="form-control" autoComplete="off" name="name" onKeyUp={handleFormUpdate} />
                     </div>
                   </div>
                   <button onClick={handleFormSubmit} className="btn btn-success" id="btn-submit">Simpan</button>{" "}

@@ -78,7 +78,7 @@ export default function Roles() {
           <Link to="/" className="badge badge-danger p-3" onClick={(e) => {
             e.preventDefault();
 
-            deleteHandler(item.id, setCurrentPage, 'roles');
+            deleteHandler(item.id, setParams, 'roles');
           }}>
             <i className="fas fa-trash fs-5 text-white"></i>
           </Link>

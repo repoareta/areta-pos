@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useSanctum } from 'react-sanctum';
 import Select from 'react-select';
 import { toast } from 'react-toastify';
@@ -8,12 +8,13 @@ import api from '../../../Util/api';
 import { buttonStateComplete, buttonStateLoading } from '../../../Components/button.state';
 import { clearValidation, validate } from '../../../Util/validations';
 
-export const Create = () => {
+export const Edit = () => {
   const { signOut } = useSanctum();
   const [formInput, setFormInput] = useState({name: '', category: [], initial_stock: 0, unit_id: '', image: null, description: ''});
   const [loading, setloading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [units, setUnits] = useState([]);
+  const urlParams = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,45 +22,58 @@ export const Create = () => {
 
     const abortController = new AbortController();
 
-    api().get(`api/category`, {
+    api().get(`api/product/${urlParams.productId}`, {
       params: {
-        no_paginate: true,
-        no_filter: true,
+        relations: 'category',
       },
-      signal: abortController.signal,
     }).then(response => {
-      setCategories(response.data.data);
+      const product = response.data.data;
 
-      api().get(`api/units`, {
-        params: { no_paginate: true },
+      setFormInput({
+        name: product.name,
+        category: product.category?.map(item => {
+          return item.id
+        }),
+        initial_stock: product.initial_stock,
+        unit_id: product.unit_id,
+        description: product.description,
+      });
+      
+      api().get(`api/category`, {
+        params: {
+          no_paginate: true,
+          no_filter: true,
+        },
         signal: abortController.signal,
       }).then(response => {
-        setloading(false);
-        setUnits(response.data.data);
+        setCategories(response.data.data);
+  
+        api().get(`api/units`, {
+          params: { no_paginate: true },
+          signal: abortController.signal,
+        }).then(response => {
+          setloading(false);
+          setUnits(response.data.data);
+        }).catch(err => {
+          if (err.response?.status === 401) {
+            signOut();
+          }
+        });
       }).catch(err => {
         if (err.response?.status === 401) {
           signOut();
         }
       });
-    }).catch(err => {
-      if (err.response?.status === 401) {
-        signOut();
-      }
+      
     });
 
     return () => {
       abortController.abort();
     }
-  }, [signOut]);
+  }, [signOut, urlParams]);
 
   const handleFormSubmit = e => {
     const abortController = new AbortController();
-
-    const formData = new FormData();
-
-    Object.keys(formInput).map(key => {
-      return formData.append(key, formInput[key]);
-    });
 
     clearValidation();
     
@@ -67,11 +81,8 @@ export const Create = () => {
 
     buttonStateLoading('#btn-submit');
 
-    api().post('/api/product', formData, {
+    api().put(`/api/product/${urlParams.productId}`, formInput, {
       signal: abortController.signal,
-      headers: { 
-        'Content-Type': 'multipart/form-data',
-      },
     }).then(response => {
       buttonStateComplete('#btn-submit', 'Simpan');
       toast.success(response.data.message);
@@ -144,27 +155,31 @@ export const Create = () => {
                 <div className="row">
                   <div className="col-md-6 mb-10">
                     <label className="required form-label">Nama Barang</label>
-                    <input type="text" className="form-control" autoComplete="off" name="name" disabled={loading} onKeyUp={handleFormUpdate} />
+                    <input type="text" className="form-control" autoComplete="off" name="name" disabled={loading} onKeyUp={handleFormUpdate} defaultValue={formInput.name} />
                   </div>
                   <div className="col-md-6 mb-10">
                     <label className="required form-label">Kategori Barang</label>
-                    <Select className="form-control p-1" name="category[]" onChange={handleCategoriesInput} isDisabled={loading} options={categoriesOptions} placeholder="Pilih kategori" isClearable={true} isMulti={true} />
+                    <Select className="form-control p-1" name="category[]" onChange={handleCategoriesInput} isDisabled={loading} options={categoriesOptions} placeholder="Pilih kategori" isClearable={true} isMulti={true} value={
+                      categoriesOptions.filter(option => formInput.category.includes(option.value))
+                    } />
                   </div>
                   <div className="col-md-4 mb-10">
                     <label className="required form-label">Stok Awal</label>
-                    <input type="number" className="form-control" autoComplete="off" name="initial_stock" disabled={loading} onKeyUp={handleFormUpdate} />
+                    <input type="number" className="form-control" autoComplete="off" name="initial_stock" disabled={loading} onKeyUp={handleFormUpdate} defaultValue={formInput.initial_stock} />
                   </div>
                   <div className="col-md-4 mb-10">
                     <label className="required form-label">Unit</label>
-                    <Select className="form-control p-1" name="unit_id" onChange={handleUnitsInput} isDisabled={loading} options={unitsOptions} placeholder="Pilih unit" isClearable={true} />
+                    <Select className="form-control p-1" name="unit_id" onChange={handleUnitsInput} isDisabled={loading} options={unitsOptions} placeholder="Pilih unit" isClearable={true} value={
+                      unitsOptions.filter(option => option.value === formInput.unit_id)
+                    } />
                   </div>
                   <div className="col-md-4 mb-10">
-                    <label className="required form-label">Gambar</label>
+                    <label className="form-label">Gambar</label>
                     <input type="file" className="form-control" name="image" disabled={loading} onChange={handleImageInput} />
                   </div>
                   <div className="col-md-12 mb-10">
                     <label className="form-label">Dekripsi</label>
-                    <textarea className="form-control" autoComplete="off" rows={3} name="description" disabled={loading} onKeyUp={handleFormUpdate} />
+                    <textarea className="form-control" autoComplete="off" rows={3} name="description" disabled={loading} onKeyUp={handleFormUpdate} defaultValue={formInput.description} />
                   </div>
                 </div>
                 <button className="btn btn-success" id="btn-submit" onClick={handleFormSubmit} disabled={loading}>Simpan</button>{" "}

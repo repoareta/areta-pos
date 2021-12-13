@@ -119,7 +119,7 @@ export default function Suppliers() {
           </Link>
           <Link to="/" className="badge badge-danger p-3" onClick={(e) => {
             e.preventDefault();
-            deleteHandler(item.id, setCurrentPage, 'suppliers');
+            deleteHandler(item.id, setParams, 'suppliers');
           }}>
             <i className="fas fa-trash fs-5 text-white"></i>
           </Link>

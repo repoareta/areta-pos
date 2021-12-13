@@ -108,11 +108,11 @@ export const Edit = () => {
                 <div className="row">
                   <div className="col-md-6 mb-10">
                     <label className="required form-label" htmlFor="name">Full Name</label>
-                    <input type="text" className="form-control" autoComplete="off" name="name" onChange={handleFormUpdate} defaultValue={formInput.name} disabled={loading} />
+                    <input type="text" className="form-control" autoComplete="off" name="name" onKeyUp={handleFormUpdate} defaultValue={formInput.name} disabled={loading} />
                   </div>
                   <div className="col-md-6 mb-10">
                     <label className="required form-label" htmlFor="email">Email</label>
-                    <input type="email" className="form-control" autoComplete="off" name="email" onChange={handleFormUpdate} defaultValue={formInput.email} disabled={loading} />
+                    <input type="email" className="form-control" autoComplete="off" name="email" onKeyUp={handleFormUpdate} defaultValue={formInput.email} disabled={loading} />
                   </div>
                   <div className="col-md-6 mb-10">
                     <label className="required form-label" htmlFor="role">Role</label>
@@ -120,7 +120,7 @@ export const Edit = () => {
                   </div>
                   <div className="col-md-6 mb-10">
                     <label className="form-label" htmlFor="password">Password</label>
-                    <input type="password" className="form-control" autoComplete="off" name="password" onChange={handleFormUpdate} disabled={loading} />
+                    <input type="password" className="form-control" autoComplete="off" name="password" onKeyUp={handleFormUpdate} disabled={loading} />
                     <div className="form-text">Biarkan kosong jika tidak ingin mengubah password.</div>
                   </div>
                 </div>

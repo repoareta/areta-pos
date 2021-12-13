@@ -16,11 +16,6 @@ export const deleteHandler = (id, reloader, url) => {
         toast.success(response.data.message);
         reloader(prev => ({...prev}));
       });
-      window['Swal'].fire(
-        'Deleted!',
-        'Your file has been deleted.',
-        'success'
-      )
     }
   })
 }

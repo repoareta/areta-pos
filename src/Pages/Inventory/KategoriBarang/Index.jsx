@@ -1,57 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Toggle from 'react-bootstrap-toggle';
+import { useSanctum } from 'react-sanctum';
 
 import Table from '../../../Components/PageComponent/Table';
 import TablePagination from '../../../Components/PageComponent/TablePagination';
-import { dummyBlueprint } from '../../../Components/pagination.blueprint';
+import { defaultBlueprint } from '../../../Components/pagination.blueprint';
+import api from '../../../Util/api';
+import { deleteHandler } from '../../../Components/deleteHandler';
 
 export default function Kategori() {
+  const { signOut } = useSanctum();
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [items, setItems] = useState(dummyBlueprint);
+  const [items, setItems] = useState(defaultBlueprint);
+  const [params, setParams] = useState({ search: "", length: 5 });
   const [toggle, setToggle] = useState(true);
-
-  const dummyData = [
-    {
-      "id": 1,
-      "name": "Standar",
-      "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Itaque, suscipit!",
-      "created_at": "2021-10-27T15:06:52.000000Z",
-      "updated_at": "2021-10-27T15:06:52.000000Z",
-      "parent": null
-    },
-    {
-      "id": 2,
-      "name": "Middle",
-      "description": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sequi, laudantium.", 
-      "created_at": "2021-10-27T15:07:12.000000Z",
-      "updated_at": "2021-10-27T15:07:12.000000Z",
-      "parent": {
-        "id": 1,
-        "name": "Standar",
-        "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Itaque, suscipit!",
-        "created_at": "2021-10-27T15:06:52.000000Z",
-        "updated_at": "2021-10-27T15:06:52.000000Z",
-        "parent": null
-      }
-    },
-    {
-      "id": 3,
-      "name": "Advance",
-      "description": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus, praesentium?", 
-      "created_at": "2021-10-27T15:07:12.000000Z",
-      "updated_at": "2021-10-27T15:07:12.000000Z",
-      "parent": {
-        "id": 1,
-        "name": "Standar",
-        "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Itaque, suscipit!",
-        "created_at": "2021-10-27T15:06:52.000000Z",
-        "updated_at": "2021-10-27T15:06:52.000000Z",
-        "parent": null
-      },
-    },
-  ]
   
   const tableHeader = [
     {
@@ -61,10 +25,6 @@ export default function Kategori() {
     {
       title: "Parent",
       className: "",
-    },
-    {
-      title: "Deskripsi",
-      className: "min-w-200px"
     },
     {
       title: "Status",
@@ -77,34 +37,44 @@ export default function Kategori() {
   ]
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setItems(prev => ({
-        ...prev,
-        to: 3,
-        total: 3,
-        data: dummyData,
-      }));
+    const abortController = new AbortController();
 
+    api().get(`/api/category?page=${currentPage}&relations=parent`, {
+      signal: abortController.signal,
+      params: params,
+    })
+    .then(response => {
+      setItems(response.data.data);
       setLoading(false);
-    }, 500);
+    }).catch(err => {
+      if (err.response?.status === 401) {
+        signOut();
+      }
+    });
 
     return () => {
-      clearTimeout(timer);
+      abortController.abort();
     }
-  });
+  }, [params, signOut, currentPage]);
   
   const searchHandler = (e) => {
-    //
+    let searchValue = document.getElementById('search').value;
+    
+    setCurrentPage(1);
+    setParams(prevState => ({...prevState, search: searchValue}));
   }
 
   const pageLength = e => {
-    //
+    e.persist();
+
+    setCurrentPage(1);
+    setParams(prevState => ({...prevState, length: e.target.value}));
   }
 
   let content = items.data.length === 0 ? 
   <tr>
     <td colSpan={tableHeader.length} className="text-center">
-      <span className="text-dark fw-bolder text-hover-primary cursor-pointer d-block mb-1 fs-6">Barang tidak ditemukan.</span>
+      <span className="text-dark fw-bolder text-hover-primary cursor-pointer d-block mb-1 fs-6">Kategori tidak ditemukan.</span>
     </td>
   </tr> :
   items.data.map((item, index) => {
@@ -115,11 +85,6 @@ export default function Kategori() {
         </td>
         <td>
           <span className="text-dark fw-bolder text-hover-primary cursor-pointer d-block mb-1 fs-6">{item.parent ? item.parent.name : '-'}</span>
-        </td>
-        <td>
-          <span className="text-dark fw-bolder text-hover-primary cursor-pointer d-block mb-1 fs-6 text-truncate" style={{maxWidth: '300px'}} title={item.description}>
-            {item.description}
-          </span>
         </td>
         <td className="text-center">
           <Toggle
@@ -134,10 +99,14 @@ export default function Kategori() {
           />
         </td>
         <td className="text-end pe-2">
-          <Link to="/" className="badge badge-success p-3 me-1" onClick={(e) => e.preventDefault()}>
+          <Link to={`/inventory/kategori-barang/${item.id}/edit`} className="badge badge-success p-3 me-1" replace>
             <i className="fas fa-pen fs-5 text-white"></i>
           </Link>
-          <Link to="/" className="badge badge-danger p-3" onClick={(e) => e.preventDefault()}>
+          <Link to="/" className="badge badge-danger p-3" onClick={e => {
+            e.preventDefault();
+            e.target.classList.add('disabled');
+            deleteHandler(item.id, setParams, 'category');
+          }}>
             <i className="fas fa-trash fs-5 text-white"></i>
           </Link>
         </td>
