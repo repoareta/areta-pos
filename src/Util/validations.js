@@ -8,17 +8,24 @@ export const clearValidation = () => {
 
 export const validate = (selector, text) => {
   let element = document.querySelector(selector);
-  let invalid = document.createElement('div');
   let invalidFeedback = document.querySelectorAll('.invalid-feedback');
-
+  
   if (invalidFeedback.length > 0) {
     for (const prevElement of invalidFeedback) {
       prevElement.remove();
     }
   }
-
+  
+  let invalid = document.createElement('div');
+  
   invalid.classList.add('invalid-feedback');
   invalid.innerHTML = text;
-  element.classList.add('is-invalid');
-  element.parentNode.insertBefore(invalid, element.nextSibling);
+  
+  if (element !== null) {
+    const visibility = window.getComputedStyle(element);
+    if (visibility.display !== 'hidden') {
+      element?.classList.add('is-invalid');
+      element?.parentNode.insertBefore(invalid, element.nextSibling);
+    }
+  }
 }
