@@ -105,7 +105,7 @@ export default function Kategori() {
           <Link to="/" className="badge badge-danger p-3" onClick={e => {
             e.preventDefault();
             e.target.classList.add('disabled');
-            deleteHandler(item.id, setCurrentPage, 'category');
+            deleteHandler(item.id, setParams, 'category');
           }}>
             <i className="fas fa-trash fs-5 text-white"></i>
           </Link>
