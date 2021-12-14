@@ -46,7 +46,7 @@ export default function MasterBarang() {
 
     const abortController = new AbortController();
 
-    api().get(`/api/product?page=${currentPage}&relations=category`, {
+    api().get(`/api/product?page=${currentPage}&relations=category,image,unit`, {
       signal: abortController.signal,
       params: params,
     }).then(response => {
@@ -88,7 +88,7 @@ export default function MasterBarang() {
         <td className="ps-2">
           <div className="d-flex align-items-center">
             <div className="symbol symbol-50px me-5">
-              <img src={asset("assets/media/products/box.png")} className="h-75 align-self-end" alt="product" />
+              <img src={!item.image ? asset("assets/media/products/box.png") : item.image.source } className="h-75 align-self-end" alt="product" />
             </div>
             <div className="d-flex justify-content-start flex-column">
               <span className="text-dark fw-bolder text-hover-primary cursor-pointer mb-1 fs-6">{item.name}</span>
@@ -107,7 +107,7 @@ export default function MasterBarang() {
           <Toggle
             style={{ width: '105px', height: '36px' }}
             offstyle="danger"
-            onClick={() => setToggle(!toggle)}
+            onClick={() => setToggle(!item.is_active)}
             size="sm"
             handlestyle="light"
             active={item.is_active}
@@ -116,7 +116,7 @@ export default function MasterBarang() {
           />
         </td>
         <td className="text-center">
-          <span className="text-dark fw-bolder text-hover-primary cursor-pointer d-block mb-1 fs-6">{parseInt(item.initial_stock)}</span>
+          <span className="text-dark fw-bolder text-hover-primary cursor-pointer d-block mb-1 fs-6">{parseInt(item.initial_stock)} {item.unit.name}</span>
         </td>
         <td className="text-end pe-2">
           <Link to={`/inventory/master-barang/${item.id}/edit`} className="badge badge-success p-3 me-1">

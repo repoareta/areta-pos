@@ -38,7 +38,7 @@ export const Edit = () => {
         unit_id: product.unit_id,
         description: product.description,
       });
-      
+
       api().get(`api/category`, {
         params: {
           no_paginate: true,
@@ -64,7 +64,6 @@ export const Edit = () => {
           signOut();
         }
       });
-      
     });
 
     return () => {
@@ -75,14 +74,26 @@ export const Edit = () => {
   const handleFormSubmit = e => {
     const abortController = new AbortController();
 
+    const formData = new FormData();
+
+    Object.keys(formInput).map(key => {
+      return formData.append(key, formInput[key]);
+    });
+
     clearValidation();
     
     e.preventDefault();
 
     buttonStateLoading('#btn-submit');
 
-    api().put(`/api/product/${urlParams.productId}`, formInput, {
+    api().post(`/api/product/${urlParams.productId}`, formData, {
       signal: abortController.signal,
+      params: {
+        _method: 'PUT',
+      },
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     }).then(response => {
       buttonStateComplete('#btn-submit', 'Simpan');
       toast.success(response.data.message);
@@ -152,38 +163,40 @@ export const Edit = () => {
           <div className="card-body">
             <div className="row">
               <div className="col-12">
-                <div className="row">
-                  <div className="col-md-6 mb-10">
-                    <label className="required form-label">Nama Barang</label>
-                    <input type="text" className="form-control" autoComplete="off" name="name" disabled={loading} onKeyUp={handleFormUpdate} defaultValue={formInput.name} />
+                <form method="post" onSubmit={handleFormSubmit} encType="multipart/form-data">
+                  <div className="row">
+                    <div className="col-md-6 mb-10">
+                      <label className="required form-label">Nama Barang</label>
+                      <input type="text" className="form-control" autoComplete="off" name="name" disabled={loading} onKeyUp={handleFormUpdate} defaultValue={formInput.name} />
+                    </div>
+                    <div className="col-md-6 mb-10">
+                      <label className="required form-label">Kategori Barang</label>
+                      <Select className="form-control p-1" name="category[]" onChange={handleCategoriesInput} isDisabled={loading} options={categoriesOptions} placeholder="Pilih kategori" isClearable={true} isMulti={true} value={
+                        categoriesOptions.filter(option => formInput.category.includes(option.value))
+                      } />
+                    </div>
+                    <div className="col-md-4 mb-10">
+                      <label className="required form-label">Stok Awal</label>
+                      <input type="number" className="form-control" autoComplete="off" name="initial_stock" disabled={loading} onKeyUp={handleFormUpdate} defaultValue={parseInt(formInput.initial_stock)} />
+                    </div>
+                    <div className="col-md-4 mb-10">
+                      <label className="required form-label">Unit</label>
+                      <Select className="form-control p-1" name="unit_id" onChange={handleUnitsInput} isDisabled={loading} options={unitsOptions} placeholder="Pilih unit" isClearable={true} value={
+                        unitsOptions.filter(option => option.value === formInput.unit_id)
+                      } />
+                    </div>
+                    <div className="col-md-4 mb-10">
+                      <label className="form-label">Gambar</label>
+                      <input type="file" className="form-control" name="image" disabled={loading} onChange={handleImageInput} />
+                    </div>
+                    <div className="col-md-12 mb-10">
+                      <label className="form-label">Dekripsi</label>
+                      <textarea className="form-control" autoComplete="off" rows={3} name="description" disabled={loading} onKeyUp={handleFormUpdate} defaultValue={formInput.description} />
+                    </div>
                   </div>
-                  <div className="col-md-6 mb-10">
-                    <label className="required form-label">Kategori Barang</label>
-                    <Select className="form-control p-1" name="category[]" onChange={handleCategoriesInput} isDisabled={loading} options={categoriesOptions} placeholder="Pilih kategori" isClearable={true} isMulti={true} value={
-                      categoriesOptions.filter(option => formInput.category.includes(option.value))
-                    } />
-                  </div>
-                  <div className="col-md-4 mb-10">
-                    <label className="required form-label">Stok Awal</label>
-                    <input type="number" className="form-control" autoComplete="off" name="initial_stock" disabled={loading} onKeyUp={handleFormUpdate} defaultValue={formInput.initial_stock} />
-                  </div>
-                  <div className="col-md-4 mb-10">
-                    <label className="required form-label">Unit</label>
-                    <Select className="form-control p-1" name="unit_id" onChange={handleUnitsInput} isDisabled={loading} options={unitsOptions} placeholder="Pilih unit" isClearable={true} value={
-                      unitsOptions.filter(option => option.value === formInput.unit_id)
-                    } />
-                  </div>
-                  <div className="col-md-4 mb-10">
-                    <label className="form-label">Gambar</label>
-                    <input type="file" className="form-control" name="image" disabled={loading} onChange={handleImageInput} />
-                  </div>
-                  <div className="col-md-12 mb-10">
-                    <label className="form-label">Dekripsi</label>
-                    <textarea className="form-control" autoComplete="off" rows={3} name="description" disabled={loading} onKeyUp={handleFormUpdate} defaultValue={formInput.description} />
-                  </div>
-                </div>
-                <button className="btn btn-success" id="btn-submit" onClick={handleFormSubmit} disabled={loading}>Simpan</button>{" "}
-                <Link to="/inventory/master-barang" className="btn btn-warning">Kembali</Link>
+                  <button className="btn btn-success" id="btn-submit" type="submit" disabled={loading}>Simpan</button>{" "}
+                  <Link to="/inventory/master-barang" className="btn btn-warning">Kembali</Link>
+                </form>
               </div>
             </div>
           </div>
